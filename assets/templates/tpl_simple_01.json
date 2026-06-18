@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "templateId": "tpl_simple_01",
+  "name": "简约白",
+  "style": "simple",
+  "canvas": {
+    "width": 750,
+    "backgroundColor": "#FFFFFF",
+    "exportMaxWidth": 1242,
+    "exportImageMaxEdge": 2880,
+    "exportMaxBytes": 10485760
+  },
+  "theme": {
+    "primaryColor": "#1A1A1A",
+    "accentColor": "#07C160",
+    "priceColor": "#F53F3F",
+    "textPrimary": "#1A1A1A",
+    "textSecondary": "#999999",
+    "fontFamily": "PingFang SC, Microsoft YaHei, sans-serif",
+    "titleFontSize": 34,
+    "bodyFontSize": 28,
+    "captionFontSize": 22
+  },
+  "mode": "single",
+  "blocks": [
+    {
+      "id": "hero",
+      "type": "hero_image",
+      "height": 420,
+      "padding": { "top": 24, "right": 32, "bottom": 0, "left": 32 },
+      "bind": { "imageSource": { "slot": "exterior.front", "fallback": "any" } },
+      "style": { "borderRadius": 16, "objectFit": "cover" }
+    },
+    {
+      "id": "desc",
+      "type": "vehicle_description",
+      "height": "auto",
+      "padding": { "top": 16, "right": 32, "bottom": 8, "left": 32 },
+      "bind": { "text": "polishedDescription", "title": { "literal": "产品介绍" } },
+      "style": { "fontSize": 26, "lineHeight": 1.5, "backgroundColor": "#F9F9F9", "showTitle": true }
+    },
+    {
+      "id": "grid",
+      "type": "photo_grid",
+      "height": "auto",
+      "padding": { "top": 8, "right": 32, "bottom": 8, "left": 32 },
+      "bind": { "photos": {} },
+      "style": { "columns": 2, "gap": 12, "cellAspectRatio": "4:3", "borderRadius": 8 }
+    },
+    {
+      "id": "footer",
+      "type": "footer_cta",
+      "height": 280,
+      "padding": { "top": 16, "right": 32, "bottom": 32, "left": 32 },
+      "bind": {
+        "title": { "literal": "扫码咨询" },
+        "subtitle": "dealerProfile.shopName",
+        "phone": "dealerProfile.contactPhone",
+        "qrcode": "dealerProfile.qrcodePath",
+        "showCodeOnFooter": true
+      },
+      "style": { "backgroundColor": "#F5F5F5", "qrcodeSize": 160 }
+    }
+  ],
+  "multiVehicle": {
+    "vehicleBlockTemplate": [
+      { "id": "v_code", "type": "vehicle_code", "height": 44, "padding": { "top": 4, "right": 32, "bottom": 0, "left": 32 }, "bind": { "code": "code" }, "style": { "align": "left", "fontSize": 22, "prefix": "编号: ", "fontWeight": 600 } },
+      { "id": "v_hero", "type": "hero_image", "height": 320, "padding": { "top": 8, "right": 32, "bottom": 8, "left": 32 }, "bind": { "imageSource": { "slot": "exterior.front", "fallback": "any" } }, "style": { "borderRadius": 12, "objectFit": "cover" } },
+      { "id": "v_desc", "type": "vehicle_description", "height": "auto", "padding": { "top": 8, "right": 32, "bottom": 4, "left": 32 }, "bind": { "title": { "literal": "产品介绍" } }, "style": { "fontSize": 24, "lineHeight": 1.5 } },
+      { "id": "v_grid", "type": "photo_grid", "height": "auto", "padding": { "top": 4, "right": 32, "bottom": 8, "left": 32 }, "bind": { "photos": {} }, "style": { "columns": 2, "gap": 10 } }
+    ],
+    "betweenBlocks": [
+      {
+        "id": "div",
+        "type": "divider",
+        "height": 72,
+        "padding": { "top": 8, "right": 32, "bottom": 8, "left": 32 },
+        "bind": { "label": { "template": "编号 {vehicleCode}" } },
+        "style": {
+          "lineStyle": "solid",
+          "lineColor": "#07C160",
+          "accentColor": "#07C160",
+          "lineWidth": 3,
+          "fontSize": 24,
+          "backgroundColor": "#F0FFF4"
+        }
+      }
+    ],
+    "headerBlocks": [
+      {
+        "id": "multi_cover",
+        "type": "cover_header",
+        "height": 180,
+        "bind": {
+          "title": { "literal": "今日好物推荐" },
+          "subtitle": { "template": "精选 {vehicleCount} 件优质产品" }
+        },
+        "style": { "backgroundGradient": ["#07C160", "#95EC69"], "titleColor": "#FFFFFF" }
+      }
+    ],
+    "footerBlocks": [
+      {
+        "id": "footer",
+        "type": "footer_cta",
+        "height": 260,
+        "bind": {
+          "title": { "literal": "扫码咨询全部产品" },
+          "subtitle": { "literal": "全部可议，欢迎询价" },
+          "phone": "dealerProfile.contactPhone",
+          "qrcode": "dealerProfile.qrcodePath"
+        }
+      }
+    ],
+    "maxVehicles": 10
+  }
+}

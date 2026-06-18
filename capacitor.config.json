@@ -1,0 +1,12 @@
+{
+  "appId": "com.usedcar.assistant",
+  "appName": "产品销售助手",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

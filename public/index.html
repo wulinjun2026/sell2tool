@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="产品销售助手">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#07C160">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>通用产品销售助手</title>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body>
+<div class="app" id="app">
+  <input type="file" id="file-input" class="hidden-input" accept="image/*" multiple>
+  <input type="file" id="qrcode-input" class="hidden-input" accept="image/*">
+
+  <!-- 产品列表 -->
+  <div class="screen active" id="page-list">
+    <div class="navbar">
+      <input type="text" class="navbar-search" id="search-input" placeholder="🔍 搜索产品名或编号">
+      <button class="right" id="btn-new-vehicle">+ 新建</button>
+    </div>
+    <div class="filter-bar" id="filter-bar">
+      <span class="filter-chip active" data-filter="all">全部</span>
+      <span class="filter-chip" data-filter="on_sale">🟢 在售</span>
+      <span class="filter-chip" data-filter="sold">🔴 已售</span>
+      <span class="filter-chip" data-filter="draft">⚪ 草稿</span>
+    </div>
+    <div class="list-scroll-shell" data-scroll-shell="car">
+      <div class="list-scroll-panel" id="car-list-scroll">
+        <div id="car-list"></div>
+      </div>
+      <div class="list-scrollbar" aria-hidden="true">
+        <div class="list-scrollbar-thumb"></div>
+      </div>
+    </div>
+    <div class="list-page-footer">
+    <div class="summary-bar">
+      <span>共 <span id="total-count">0</span> 件</span>
+      <span class="summary-actions">
+        <button type="button" class="select-all-btn" id="btn-select-all">全选</button>
+        <span class="stats-inline">在售 <span id="sale-count" style="color:#00A870;font-weight:600">0</span> · 已售 <span id="sold-count" style="color:#F53F3F;font-weight:600">0</span></span>
+      </span>
+    </div>
+    <div class="batch-actions-panel" id="batch-actions-panel">
+      <button class="btn-sm primary" id="btn-generate" disabled>生成长图 (<span id="generate-count">0</span>)</button>
+      <button class="btn-sm outline" id="btn-batch-sell" disabled>批量已售</button>
+      <button class="btn-sm outline danger" id="btn-batch-del" disabled>批量删除</button>
+    </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item active" data-tab="page-list"><span class="icon"></span><span class="label">产品</span></div>
+      <div class="tab-item" data-tab="page-upload"><span class="icon"></span><span class="label">拍照</span></div>
+      <div class="tab-item" data-tab="page-gallery"><span class="icon"></span><span class="label">图库</span></div>
+      <div class="tab-item" data-tab="page-profile"><span class="icon"></span><span class="label">我的</span></div>
+    </div>
+  </div>
+
+  <!-- 拍照上传 -->
+  <div class="screen" id="page-upload">
+    <div class="navbar">
+      <button class="back" onclick="history.back()">‹</button>
+      <span class="title">📸 上传照片</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="upload-page-scroll">
+    <div class="step-progress">
+      <div class="step-dot active" id="step-dot-0"></div>
+      <div class="step-dot" id="step-dot-1"></div>
+      <div class="step-dot" id="step-dot-2"></div>
+    </div>
+    <div class="upload-batch-bar">
+      <button type="button" class="btn-block outline" id="btn-batch-all-photos">📷 一次选多张（自动填充外观/细节/补充）</button>
+      <p class="upload-mode-hint" id="upload-mode-hint">两种方式二选一：选「一次选多张」后，下方分步上传将锁定。已上传照片点击可替换或删除</p>
+    </div>
+    <div id="upload-global-progress" class="upload-global-progress" hidden></div>
+    <div id="upload-step-area">
+      <div class="step-content" id="step-0"></div>
+      <div class="step-content" id="step-1" style="display:none"></div>
+      <div class="step-content" id="step-2" style="display:none"></div>
+    </div>
+    <div class="upload-page-actions">
+      <button class="btn-block primary" id="btn-upload-next" style="display:none">下一步</button>
+      <button class="btn-block success" id="btn-upload-done" style="display:none">✅ 完成上传</button>
+    </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" data-tab="page-list"><span class="icon"></span><span class="label">产品</span></div>
+      <div class="tab-item active" data-tab="page-upload"><span class="icon"></span><span class="label">拍照</span></div>
+      <div class="tab-item" data-tab="page-gallery"><span class="icon"></span><span class="label">图库</span></div>
+      <div class="tab-item" data-tab="page-profile"><span class="icon"></span><span class="label">我的</span></div>
+    </div>
+  </div>
+
+  <!-- 产品描述 -->
+  <div class="screen flow-screen" id="page-desc">
+    <div class="navbar">
+      <button class="back" data-goto="page-upload">‹</button>
+      <span class="title">📝 产品描述</span>
+      <button class="right" id="btn-desc-skip">跳过</button>
+    </div>
+    <div class="list-scroll-shell flow-scroll-shell" data-scroll-shell="desc">
+      <div class="list-scroll-panel" id="desc-page-scroll">
+        <div class="desc-page-body">
+          <div class="desc-section-head">
+            <div class="desc-section-title">补充产品描述</div>
+            <div class="desc-hint">💡 填写描述后自动识别产品名称与售价；可点击「AI 提炼总结」「AI 润色」优化文案</div>
+          </div>
+          <div class="desc-textarea-wrap">
+            <textarea class="desc-input" id="desc-input" placeholder="例：限时特惠2.55万，10年款旗舰套装，全新未拆封，品质保证……"></textarea>
+          </div>
+          <div class="price-field">
+            <label for="car-price-input">💰 售价（万元）</label>
+            <input id="car-price-input" type="text" inputmode="decimal" placeholder="未公布" readonly>
+          </div>
+          <div class="model-field">
+            <label for="car-model-input">产品名称</label>
+            <input id="car-model-input" type="text" placeholder="识别后自动填充，可修改" autocomplete="off" autocorrect="off">
+            <span class="desc-extract-status" id="desc-extract-status"></span>
+          </div>
+          <div class="selling-head">
+            <div class="selling-head-title">📝 AI 提炼总结 <span class="selling-head-sub">（点击选用写入描述）</span></div>
+            <button type="button" class="btn-refresh-tags" id="btn-refresh-selling">🔄 重新提炼</button>
+          </div>
+          <div class="selling-tag-hint" id="selling-tag-hint">填写描述后点击「AI 提炼总结」</div>
+          <div class="selling-tags" id="selling-tags"></div>
+          <div class="desc-ai-actions">
+            <button class="ai-btn" id="btn-generate-selling"><span class="spin">⟳</span><span class="label">✨ AI 提炼总结</span></button>
+            <button class="ai-btn" id="btn-ai-polish"><span class="spin">⟳</span><span class="label">✨ AI 润色</span></button>
+            <span id="polish-status" class="polish-status"></span>
+          </div>
+          <div class="desc-preview-block">
+            <div class="desc-preview-label">长图预览 · 产品介绍</div>
+            <div id="desc-preview" class="desc-preview empty">填写后将显示在长图「产品介绍」区域（含已选要点与售价）</div>
+          </div>
+          <div id="compare-container" class="compare-container" style="display:none">
+            <div class="compare-head">
+              <span class="compare-head-title">📊 原文 vs 润色</span>
+              <span class="compare-head-ver" id="polish-ver">v1</span>
+            </div>
+            <div class="compare-box">
+              <div class="compare-header">
+                <span id="cmp-original-tab" class="active" onclick="showCompareTab('original')">原文</span>
+                <span id="cmp-polished-tab" onclick="showCompareTab('polished')">✨ 润色版</span>
+              </div>
+              <div class="compare-body" id="cmp-body"></div>
+            </div>
+            <div class="compare-actions">
+              <button class="btn-sm" id="btn-use-polished" style="display:none">✓ 使用润色版</button>
+              <button class="btn-sm" id="btn-use-original" style="display:none">↩ 恢复原文</button>
+              <button class="btn-sm" id="btn-polish-again" style="display:none">🔄 再次润色</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="list-scrollbar" aria-hidden="true">
+        <div class="list-scrollbar-thumb"></div>
+      </div>
+    </div>
+    <div class="flow-page-footer">
+      <button class="btn-block primary flow-primary-btn" id="btn-desc-next">下一步 → 选择模板</button>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" data-tab="page-list"><span class="icon"></span><span class="label">产品</span></div>
+      <div class="tab-item active" data-tab="page-upload"><span class="icon"></span><span class="label">拍照</span></div>
+      <div class="tab-item" data-tab="page-gallery"><span class="icon"></span><span class="label">图库</span></div>
+      <div class="tab-item" data-tab="page-profile"><span class="icon"></span><span class="label">我的</span></div>
+    </div>
+  </div>
+
+  <!-- 模板 & 预览 -->
+  <div class="screen" id="page-template">
+    <div class="navbar">
+      <button class="back" data-goto="page-desc">‹</button>
+      <span class="title">🎨 模板 & 预览</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="template-layout-bar">
+      <div class="template-mini-grid" id="template-grid"></div>
+      <div class="layout-mini-grid" id="layout-grid"></div>
+    </div>
+    <div class="preview-header">
+      <span>📄 长图预览</span>
+      <span id="preview-code">1242px</span>
+    </div>
+    <div class="long-img-preview" id="long-preview"></div>
+    <div id="multi-car-bar" style="display:none;padding:6px 12px;">
+      <div class="multi-bar">✅ 已选择 <span id="multi-count">2</span> 件产品</div>
+    </div>
+    <div class="action-buttons-row">
+      <button class="btn-action primary" id="btn-show-share">📤 分享</button>
+      <button class="btn-action" id="btn-save-album">💾 保存</button>
+      <button class="btn-action" id="btn-save-gallery">🖼️ 图库</button>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" data-tab="page-list"><span class="icon"></span><span class="label">产品</span></div>
+      <div class="tab-item active" data-tab="page-upload"><span class="icon"></span><span class="label">拍照</span></div>
+      <div class="tab-item" data-tab="page-gallery"><span class="icon"></span><span class="label">图库</span></div>
+      <div class="tab-item" data-tab="page-profile"><span class="icon"></span><span class="label">我的</span></div>
+    </div>
+  </div>
+
+  <!-- 图库 -->
+  <div class="screen" id="page-gallery">
+    <div class="navbar">
+      <span class="spacer"></span>
+      <span class="title">🖼️ 本地图库</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="list-scroll-shell" data-scroll-shell="gallery">
+      <div class="list-scroll-panel" id="gallery-list-scroll">
+        <div id="gallery-list"></div>
+      </div>
+      <div class="list-scrollbar" aria-hidden="true">
+        <div class="list-scrollbar-thumb"></div>
+      </div>
+    </div>
+    <p class="gallery-hint">多品合集与单品长图记录均可删除；「删产品」仅对已售单品生效。</p>
+    <div class="tab-bar">
+      <div class="tab-item" data-tab="page-list"><span class="icon"></span><span class="label">产品</span></div>
+      <div class="tab-item" data-tab="page-upload"><span class="icon"></span><span class="label">拍照</span></div>
+      <div class="tab-item active" data-tab="page-gallery"><span class="icon"></span><span class="label">图库</span></div>
+      <div class="tab-item" data-tab="page-profile"><span class="icon"></span><span class="label">我的</span></div>
+    </div>
+  </div>
+
+  <!-- 我的 -->
+  <div class="screen" id="page-profile">
+    <div class="navbar">
+      <span class="spacer"></span>
+      <span class="title">👤 我的</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="profile-scroll-body">
+    <div style="text-align:center;padding:32px 20px 16px;" id="profile-header">
+      <div style="font-size:64px;margin-bottom:12px;">👤</div>
+      <h3 style="font-size:20px;font-weight:600;" id="dealer-name">销售者</h3>
+      <p style="color:#999;margin:4px 0 12px;" id="dealer-phone-display">📞 —</p>
+      <p class="trial-bar" id="trial-quota">免费试用：登录后可见</p>
+      <p class="quota-bar" id="product-quota">产品配额：— / 40</p>
+      <div style="display:flex;gap:12px;justify-content:center;margin-bottom:16px;">
+        <div style="background:#F5F5F5;border-radius:12px;padding:16px 24px;"><div style="font-size:24px;font-weight:600;color:#07C160;" id="profile-total">0</div><div style="font-size:12px;color:#999;">总产品</div></div>
+        <div style="background:#F5F5F5;border-radius:12px;padding:16px 24px;"><div style="font-size:24px;font-weight:600;color:#00A870;" id="profile-sale">0</div><div style="font-size:12px;color:#999;">在售</div></div>
+        <div style="background:#F5F5F5;border-radius:12px;padding:16px 24px;"><div style="font-size:24px;font-weight:600;color:#999;" id="profile-pub">0</div><div style="font-size:12px;color:#999;">已发布</div></div>
+      </div>
+    </div>
+    <div class="login-panel" id="login-panel">
+      <div class="dealer-settings-title">📱 手机号登录</div>
+      <p class="dealer-settings-hint">登录后产品数据相互隔离；免费试用 20 天，最多 40 个产品</p>
+      <label class="field-label" for="login-phone-input">手机号</label>
+      <input class="dealer-field" id="login-phone-input" type="tel" inputmode="numeric" maxlength="11" placeholder="请输入11位手机号">
+      <label class="field-label" for="login-code-input">验证码</label>
+      <input class="dealer-field" id="login-code-input" type="text" inputmode="numeric" maxlength="7" placeholder="6位验证码">
+      <p class="login-dev-hint hidden" id="login-dev-hint"></p>
+      <div class="login-submit-stack">
+        <button type="button" class="btn-block outline login-code-btn" id="btn-send-code">获取验证码</button>
+        <button type="button" class="btn-block primary login-submit-btn" id="btn-login">登录</button>
+      </div>
+    </div>
+    <div class="profile-authed hidden" id="profile-authed">
+    <div class="dealer-settings">
+      <div class="dealer-settings-title">📇 长图底部联系信息</div>
+      <p class="dealer-settings-hint">保存后将显示在分享长图底部，修改后需重新生成长图</p>
+      <label class="field-label" for="dealer-shop-input">姓名 / 店铺名</label>
+      <input class="dealer-field" id="dealer-shop-input" type="text" placeholder="例：李明精品店">
+      <label class="field-label" for="dealer-phone-input">联系电话</label>
+      <input class="dealer-field" id="dealer-phone-input" type="tel" placeholder="例：13888888888">
+      <label class="field-label" for="dealer-wechat-input">微信号（选填）</label>
+      <input class="dealer-field" id="dealer-wechat-input" type="text" placeholder="例：liming_cars">
+      <label class="field-label">微信二维码</label>
+      <button type="button" class="qrcode-upload" id="btn-upload-qrcode">
+        <img id="dealer-qrcode-img" alt="二维码预览" class="hidden">
+        <span id="dealer-qrcode-placeholder">+ 点击上传二维码</span>
+      </button>
+      <button type="button" class="btn-block primary" id="btn-save-dealer">保存资料</button>
+    </div>
+    <button type="button" class="btn-block outline" id="btn-logout" style="margin:0 16px 16px;">退出登录</button>
+    <div class="dealer-settings settings-hub hidden" id="settings-hub">
+      <div class="dealer-settings-title">⚙️ 系统配置</div>
+      <p class="dealer-settings-hint">管理员可修改全局参数，保存后立即生效</p>
+      <button type="button" class="settings-nav-btn" data-goto-settings="page-settings-system">系统与账号</button>
+      <button type="button" class="settings-nav-btn" data-goto-settings="page-settings-ai">AI 与队列</button>
+      <button type="button" class="settings-nav-btn" data-goto-settings="page-settings-client">性能与体验</button>
+      <button type="button" class="settings-nav-btn" data-goto-settings="page-settings-users">使用者状态</button>
+    </div>
+    </div>
+    <div class="dealer-settings server-settings-panel hidden" id="server-settings-panel" aria-hidden="true">
+      <p class="dealer-settings-hint">浏览器访问 IP 时通常无需修改；安装 APK 后请填写服务器地址（如 http://106.12.40.212）</p>
+      <label class="field-label" for="server-url-input">服务器 URL</label>
+      <input class="dealer-field" id="server-url-input" type="url" inputmode="url" placeholder="http://106.12.40.212">
+      <button type="button" class="btn-block outline" id="btn-test-server">测试连接</button>
+      <button type="button" class="btn-block primary" id="btn-save-server">保存服务器</button>
+    </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab-item" data-tab="page-list"><span class="icon"></span><span class="label">产品</span></div>
+      <div class="tab-item" data-tab="page-upload"><span class="icon"></span><span class="label">拍照</span></div>
+      <div class="tab-item" data-tab="page-gallery"><span class="icon"></span><span class="label">图库</span></div>
+      <div class="tab-item active" data-tab="page-profile"><span class="icon"></span><span class="label">我的</span></div>
+    </div>
+  </div>
+
+  <div class="screen flow-screen" id="page-settings-system" data-settings-page="system">
+    <div class="navbar">
+      <button class="back" data-goto="page-profile">‹</button>
+      <span class="title">系统与账号</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="settings-page-body">
+      <p class="settings-meta" id="settings-meta-system"></p>
+      <div class="dealer-settings" id="settings-form-system"></div>
+    </div>
+  </div>
+
+  <div class="screen flow-screen" id="page-settings-ai" data-settings-page="ai">
+    <div class="navbar">
+      <button class="back" data-goto="page-profile">‹</button>
+      <span class="title">AI 与队列</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="settings-page-body">
+      <p class="settings-meta" id="settings-meta-ai"></p>
+      <div class="dealer-settings" id="settings-form-ai"></div>
+    </div>
+  </div>
+
+  <div class="screen flow-screen" id="page-settings-client" data-settings-page="client">
+    <div class="navbar">
+      <button class="back" data-goto="page-profile">‹</button>
+      <span class="title">性能与体验</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="settings-page-body">
+      <p class="settings-meta" id="settings-meta-client"></p>
+      <div class="dealer-settings" id="settings-form-client"></div>
+    </div>
+  </div>
+
+  <div class="screen flow-screen" id="page-settings-users" data-settings-page="users">
+    <div class="navbar">
+      <button class="back" data-goto="page-profile">‹</button>
+      <span class="title">使用者状态</span>
+      <span class="spacer"></span>
+    </div>
+    <div class="settings-page-body users-admin-page">
+      <div class="dealer-settings" id="settings-form-users"></div>
+    </div>
+  </div>
+
+  <div class="preview-overlay" id="preview-overlay" onclick="hidePosterPreview()"></div>
+  <div class="preview-panel" id="preview-panel">
+    <div class="preview-panel-header">
+      <span>长图预览</span>
+      <button type="button" class="preview-close" onclick="hidePosterPreview()">关闭</button>
+    </div>
+    <div class="preview-poster-body" id="preview-poster-body"></div>
+  </div>
+
+  <div class="share-overlay" id="share-overlay" onclick="hideShare()"></div>
+  <div class="share-panel" id="share-panel">
+    <h3>📤 分享到朋友圈</h3>
+    <div class="share-poster-preview" id="share-poster-preview">
+      <div class="share-preview-empty">长图加载中…</div>
+    </div>
+    <textarea class="share-textarea" id="share-text"></textarea>
+    <div style="font-size:12px;color:#999;margin-bottom:12px;">支持修改文案；点击分享将发送 PNG 长图（非网页链接），文案会自动复制</div>
+    <div class="share-actions">
+      <button class="cancel" onclick="hideShare()">取消</button>
+      <button class="confirm" onclick="doShare()">分享到微信</button>
+    </div>
+  </div>
+
+  <div class="photo-action-overlay" id="photo-action-overlay"></div>
+  <div class="photo-action-sheet" id="photo-action-sheet">
+    <div class="photo-action-preview" id="photo-action-preview"></div>
+    <p class="photo-action-title" id="photo-action-title"></p>
+    <button type="button" class="photo-action-btn" id="photo-action-replace">🔄 替换图片</button>
+    <button type="button" class="photo-action-btn danger" id="photo-action-delete">🗑️ 删除图片</button>
+    <button type="button" class="photo-action-btn cancel" id="photo-action-cancel">取消</button>
+  </div>
+
+  <div class="dialog-overlay" id="paywall-overlay">
+    <div class="dialog paywall-dialog">
+      <h3 id="paywall-title">需要升级</h3>
+      <p id="paywall-msg">免费版最多发布 40 个产品。如需继续发布，请付费升级账号。</p>
+      <p class="paywall-contact">请联系管理员开通付费版，解锁完整功能与更多产品配额。</p>
+      <div class="dialog-actions">
+        <button class="confirm" id="paywall-close">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog-overlay" id="dialog-overlay">
+    <div class="dialog">
+      <h3 id="dialog-title">确认</h3>
+      <p id="dialog-msg"></p>
+      <div class="dialog-actions">
+        <button class="cancel" onclick="closeDialog()">取消</button>
+        <button class="confirm-del" id="dialog-confirm-btn">确认</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="pwa-install-banner hidden" id="pwa-install-banner">
+    <span>安装到手机桌面，像 App 一样使用</span>
+    <button type="button" id="btn-pwa-install">安装</button>
+  </div>
+</div>
+
+<script type="module" src="/js/app.js"></script>
+</body>
+</html>

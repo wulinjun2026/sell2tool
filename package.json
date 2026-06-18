@@ -1,0 +1,42 @@
+{
+  "name": "used-car-assistant",
+  "version": "1.1.0",
+  "description": "通用产品销售助手 - 本地可测试 MVP",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js",
+    "test": "node tests/auth-user-test.js && node tests/app-settings-test.js && node tests/user-admin-test.js && node tests/app-syntax-test.js && node tests/desc-extract-test.js && node tests/poster-footer-color-test.js && node tests/run-tests.js && node tests/client-poster-render-test.js && node tests/poster-embed-test.js && node tests/poster-grid-all-photos-test.js && node tests/qrcode-embed-test.js && node tests/poster-record-delete-test.js && node tests/upload-photos-test.js && node tests/photo-upload-mode-test.js && node tests/photo-upload-progress-test.js && node tests/photo-replace-delete-test.js && node tests/poster-progress-animation-test.js && node tests/desc-compose-test.js && node tests/profile-published-count-test.js && node tests/desc-selling-generate-test.js && node tests/selling-recommend-vehicle-test.js && node tests/vehicle-recognize-test.js && node tests/dealer-poster-test.js && node tests/multi-poster-test.js && node tests/poster-font-test.js && node tests/poster-text-test.js && node tests/poster-phone-test.js && node tests/poster-preview-test.js && node tests/poster-quality-test.js && node tests/poster-filename-test.js && node tests/safari-browser-test.js && node tests/poster-cli-test.js && node tests/poster-save-test.js && node tests/photo-distribute-test.js && node tests/poster-cache-test.js && node tests/poster-cache-reuse-test.js && node tests/poster-confirm-test.js && node tests/gallery-store-test.js && node tests/mobile-app-test.js",
+    "test:baidu-live": "node tests/baidu-live-production-test.js",
+    "icons": "node scripts/generate-pwa-icons.js",
+    "cap:sync": "npx cap sync android",
+    "android:build": "bash scripts/build-android-apk.sh",
+    "init-db": "node server/scripts/init-db.js",
+    "pack": "bash scripts/build-deploy-tarball.sh",
+    "video:intro": "python3 scripts/generate-product-intro-video.py",
+    "video:capture": "node scripts/capture-app-screenshots.mjs",
+    "video:compose-shots": "python3 scripts/compose-phone-screenshot.py"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.2.0",
+    "@capacitor/core": "^6.2.0",
+    "@capacitor/filesystem": "^6.0.4",
+    "@capacitor/share": "^6.0.4",
+    "@resvg/resvg-js": "^2.6.2",
+    "better-sqlite3": "^11.7.0",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.14.1",
+    "sharp": "^0.33.5",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^6.2.0",
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "playwright": "^1.60.0"
+  }
+}

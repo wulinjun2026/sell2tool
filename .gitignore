@@ -1,0 +1,10 @@
+node_modules/
+data/
+.DS_Store
+*.log
+.env
+android/app/build/
+android/.gradle/
+dist/
+public/icons/
+output/

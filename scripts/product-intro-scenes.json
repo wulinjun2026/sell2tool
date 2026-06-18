@@ -1,0 +1,62 @@
+{
+  "title": "通用产品销售助手 功能介绍",
+  "version": "1.1.0",
+  "scenes": [
+    {
+      "id": "opening",
+      "title": "开场 · 个体商户的痛点",
+      "subtitle": "杂图发朋友圈 · 文案难写 · 长图费时",
+      "durationHint": 20,
+      "narration": "还在用手机相册里一堆杂图发朋友圈？文案写到一半又删，长图做一张要半天？今天给你介绍一款，专为个体商户打造的——通用产品销售助手。从拍照、写文案，到生成高清营销长图，一部手机就能全流程搞定。",
+      "imagePrompt": "Modern minimalist illustration, small business owner frustrated with messy phone photo gallery and social media marketing, clean flat design, teal accent #07C160, Chinese SaaS product ad style, 16:9, no text"
+    },
+    {
+      "id": "positioning",
+      "title": "产品定位 · 四大 Tab",
+      "subtitle": "产品 · 拍照 · 图库 · 我的",
+      "durationHint": 20,
+      "narration": "打开浏览器，或者把应用添加到手机桌面，你会看到四个主 Tab：产品、拍照、图库、我的。先用手机号登录，验证码一键验证。每个账号的数据完全独立，你的产品和图片，只有你自己能看到。",
+      "imagePrompt": "Sleek mobile app UI mockup on smartphone, four bottom tabs labeled in Chinese style product icons, green theme #07C160, login screen with phone verification, professional product marketing screenshot style, 16:9, no readable text"
+    },
+    {
+      "id": "upload",
+      "title": "结构化拍照 · 三步上传",
+      "subtitle": "外观 / 细节 / 补充 · 一次选多张",
+      "durationHint": 30,
+      "narration": "点录入，开始添加新产品。上传照片有两种方式：一种是分步上传——外观、细节、补充，三步走，一共十三个标准位置，该拍哪里清清楚楚；另一种是「一次选多张」，从相册里批量选图，系统自动帮你填进对应槽位，几十秒就能完成一套图。已经传错？点一下就能替换或删除，不用重来。",
+      "imagePrompt": "Mobile app photo upload workflow UI, three step progress bar, grid of photo slots for product photography, batch select from gallery, clean green white interface, e-commerce listing tool, 16:9, no text"
+    },
+    {
+      "id": "ai-copy",
+      "title": "AI 写文案 · 卖点与润色",
+      "subtitle": "生成卖点 · 换一批 · 融入正文",
+      "durationHint": 30,
+      "narration": "照片好了，进入产品描述页。填写产品名称和售价，再写几句补充说明。然后交给 AI：点 AI 生成卖点，系统会根据你的描述，自动生成多条精炼卖点；不满意？点换一批。看中的卖点，点一下就能融入正文；还可以一键 AI 润色，把整段介绍改得更专业、更好读。下方的长图预览区会实时同步，卖点和售价，客户在长图里一眼就能看到。",
+      "imagePrompt": "Mobile app product description editor with AI sparkle icons, selling point tags, price field, live poster preview panel below, smart copywriting assistant, green accent UI, 16:9, no text"
+    },
+    {
+      "id": "poster",
+      "title": "高清长图 · 多品合集",
+      "subtitle": "三种模板 · 1242px · 进度可视",
+      "durationHint": 40,
+      "narration": "文案就绪，进入模板与预览。提供三种风格：简约白、商务蓝、运动橙，点一下就能切换。系统会生成 1242 像素宽的高清营销长图，适合朋友圈、社群、小红书。更厉害的是——回到产品列表，勾选多个产品，点生成长图，可以一次性输出多品超长图，一图展示多款，效率翻倍。生成过程中有分阶段进度提示，加载、嵌入、渲染、导出，每一步都看得见，不用干等。",
+      "imagePrompt": "Long vertical marketing poster preview on phone, three template style cards, circular progress ring animation at 98 percent, multi-product collage banner, professional Chinese social commerce ad, 16:9, no text"
+    },
+    {
+      "id": "share",
+      "title": "分享保存 · 个人品牌",
+      "subtitle": "图库 · 微信二维码 · 批量管理",
+      "durationHint": 30,
+      "narration": "长图满意了，三个动作任选：分享到朋友圈、保存到相册，或者存进本地图库，以后随时回看。在我的里，填好店铺名、电话、微信号，再上传你的微信二维码——这些信息会自动出现在每一张长图的底部，客户看图就能联系你，不用反复发名片。产品列表还支持搜索、筛选、批量标记已售，卖掉了就归档，库存一目了然。",
+      "imagePrompt": "Mobile app share sheet save to album, local gallery grid, dealer profile with WeChat QR code on poster footer, inventory list with sold filters, green commerce app, 16:9, no text"
+    },
+    {
+      "id": "closing",
+      "title": "立即体验",
+      "subtitle": "20 天免费试用 · 最多 40 个产品",
+      "durationHint": 10,
+      "narration": "通用产品销售助手——结构化拍照、AI 写文案、一键出长图、保存分享，全流程在手机里完成。新用户享 20 天免费试用，最多管理 40 个产品，个体商户零成本起步。现在就打开体验，让你的每一款产品，都配得上一张专业级营销长图。",
+      "imagePrompt": "Hero ending slide, confident small merchant holding phone showing beautiful product poster, call to action, green brand color #07C160 gradient background, inspiring startup marketing, 16:9, minimal no text"
+    }
+  ]
+}
